@@ -34,18 +34,21 @@ def get_all_users(filename):
 
     :param filename: Name of file to check users (for example: users.csv)."""
     all_records = []
-    with open(filename, 'r') as file:
-        csvreader = csv.reader(file)
-        for row in csvreader:
-            try:
+    try:
+        with open(filename, 'r') as file:
+            csvreader = csv.reader(file)
+            for row in csvreader:
                 user_id = int(row[0])
                 user_nick = str(row[1])
                 due_date = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f')
                 is_admin = eval(row[3])
                 user = [user_id, user_nick, due_date, is_admin]
                 all_records.append(user)
-            except:
-                pass
+    except FileNotFoundError:
+        with open(filename, 'w+') as file:
+            csvwriter = csv.writer(file)
+            csvwriter.writerow('')
+        return all_records
     return all_records
 
 
